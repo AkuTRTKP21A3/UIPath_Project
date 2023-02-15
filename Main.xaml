@@ -144,7 +144,7 @@
             <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="536,92" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Warn" Message="[&quot;CompanyCode .&quot;+companyCode+&quot;.&quot;]" />
             <ui:Comment sap:VirtualizedContainerService.HintSize="536,56" sap2010:WorkflowViewState.IdRef="Comment_1" Text="Otsikkotason parsinta&#xA;" />
             <Switch x:TypeArguments="x:String" DisplayName="Switch" Expression="[companyCode]" sap:VirtualizedContainerService.HintSize="536,1876" sap2010:WorkflowViewState.IdRef="Switch`1_1">
-              <Sequence x:Key="1234567-8" sap:VirtualizedContainerService.HintSize="496,1668" sap2010:WorkflowViewState.IdRef="Sequence_3">
+              <Sequence x:Key="1234567-8" sap:VirtualizedContainerService.HintSize="496,1927" sap2010:WorkflowViewState.IdRef="Sequence_3">
                 <Sequence.Variables>
                   <Variable x:TypeArguments="x:String" Name="invoiceDate" />
                   <Variable x:TypeArguments="x:String" Name="invoiceNumber" />
@@ -204,7 +204,7 @@
                     <InArgument x:TypeArguments="x:String" xml:space="preserve">[pdfText.Substring(
 	pdfText.IndexOf("Invoice")+9,
 	21
-)]</InArgument>
+).Trim]</InArgument>
                   </Assign.Value>
                 </Assign>
                 <Assign sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_8">
@@ -249,9 +249,9 @@
                   </Assign.To>
                   <Assign.Value>
                     <InArgument x:TypeArguments="x:String" xml:space="preserve">[pdfText.Substring(
-	pdfText.IndexOf("VAT")+8, 
-	(pdfText.IndexOf("€", (pdfText.IndexOf("VAT")+8))-
-	(pdfText.IndexOf("VAT")+8)
+	(pdfText.IndexOf("VAT", (pdfText.IndexOf("Amount excl. VAT")+17))+4), 
+	(pdfText.IndexOf("Total", (pdfText.IndexOf("VAT", (pdfText.IndexOf("Amount excl. VAT")+17))+4))-
+	(pdfText.IndexOf("VAT", (pdfText.IndexOf("Amount excl. VAT")+17))+4)
 	)
 ).Trim]</InArgument>
                   </Assign.Value>
@@ -262,15 +262,17 @@
                   </Assign.To>
                   <Assign.Value>
                     <InArgument x:TypeArguments="x:String" xml:space="preserve">[pdfText.Substring(
-	pdfText.IndexOf("Total")+5,
-	(pdfText.IndexOf("€", (pdfText.IndexOf("Total")+5))-
-	(pdfText.IndexOf("Total")+5)
+	pdfText.IndexOf("Total", (pdfText.IndexOf("Amount excl. VAT")+17))+5,
+	(pdfText.IndexOf("€", (pdfText.IndexOf("Total", (pdfText.IndexOf("Amount excl. VAT")+17))+5))-
+	(pdfText.IndexOf("Total", (pdfText.IndexOf("Amount excl. VAT")+17))+5)
 	)
 ).Trim]</InArgument>
                   </Assign.Value>
                 </Assign>
-                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,92" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Warn" Message="[&quot;Yhteensä.&quot;+totalAmount+&quot;.&quot;]" />
-                <ui:AddDataRow DataRow="{x:Null}" ArrayRow="[New Object() {invoiceNumber, companyName, referenceNumber, &#xD;&#xA;invoiceDate, dueDate, companyCode, bankAccNumber, &#xD;&#xA;Convert.ToDouble(amountExcVAT.Replace(&quot;,&quot;, &quot;.&quot;).Replace(&quot; &quot;, &quot;&quot;)), &#xD;&#xA;Convert.ToDouble(vatAmount.Replace(&quot;,&quot;, &quot;.&quot;).Replace(&quot; &quot;, &quot;&quot;)), &#xD;&#xA;Convert.ToDouble(totalAmount.Replace(&quot;,&quot;, &quot;.&quot;).Replace(&quot; &quot;, &quot;&quot;))}]" DataTable="[dt_HeaderResult]" DisplayName="Add Data Row" sap:VirtualizedContainerService.HintSize="434,186" sap2010:WorkflowViewState.IdRef="AddDataRow_1" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,92" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Warn" Message="[&quot;VAT.&quot;+vatAmount+&quot;.&quot;]" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,92" sap2010:WorkflowViewState.IdRef="LogMessage_8" Level="Warn" Message="[&quot;amountExcVAT.&quot;+amountExcVAT+&quot;.&quot;]" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,92" sap2010:WorkflowViewState.IdRef="LogMessage_9" Level="Warn" Message="[&quot;totalAmount.&quot;+totalAmount+&quot;.&quot;]" />
+                <ui:AddDataRow DataRow="{x:Null}" ArrayRow="[New Object() {invoiceNumber, companyName, referenceNumber, &#xA;invoiceDate, dueDate, companyCode, bankAccNumber, &#xA;Convert.ToDouble(amountExcVAT.Replace(&quot;,&quot;, &quot;.&quot;).Replace(&quot; &quot;, &quot;&quot;)), &#xA;Convert.ToDouble(vatAmount.Replace(&quot;€&quot;, &quot;&quot;).Replace(&quot;,&quot;, &quot;.&quot;).Replace(&quot; &quot;, &quot;&quot;).Trim), &#xA;Convert.ToDouble(totalAmount.Replace(&quot;,&quot;, &quot;.&quot;).Replace(&quot; &quot;, &quot;&quot;))}]" DataTable="[dt_HeaderResult]" DisplayName="Add Data Row" sap:VirtualizedContainerService.HintSize="434,186" sap2010:WorkflowViewState.IdRef="AddDataRow_1" />
               </Sequence>
               <Sequence x:Key="1234567-9" sap:VirtualizedContainerService.HintSize="496,1668" sap2010:WorkflowViewState.IdRef="Sequence_5">
                 <Sequence.Variables>
@@ -328,9 +330,9 @@
                   </Assign.To>
                   <Assign.Value>
                     <InArgument x:TypeArguments="x:String" xml:space="preserve">[pdfText.Substring(
-	pdfText.IndexOf("Invoice")+9,
-	21
-)]</InArgument>
+	pdfText.IndexOf("15.10.2022")+11,
+	15
+).Trim]</InArgument>
                   </Assign.Value>
                 </Assign>
                 <Assign sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_16">
@@ -355,7 +357,7 @@
 )]</InArgument>
                   </Assign.Value>
                 </Assign>
-                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,92" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Warn" Message="[&quot;eris.&quot;+dueDate+&quot;.&quot;]" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,92" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Warn" Message="[&quot;Companynimi.&quot;+companyName+&quot;.&quot;]" />
                 <Assign sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_18">
                   <Assign.To>
                     <OutArgument x:TypeArguments="x:String">[amountExcVAT]</OutArgument>
@@ -374,8 +376,8 @@
                   <Assign.Value>
                     <InArgument x:TypeArguments="x:String" xml:space="preserve">[pdfText.Substring(
 	pdfText.IndexOf("VAT:")+41,
-	6
-)]</InArgument>
+	4
+).Trim]</InArgument>
                   </Assign.Value>
                 </Assign>
                 <Assign sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_20">
@@ -385,8 +387,8 @@
                   <Assign.Value>
                     <InArgument x:TypeArguments="x:String" xml:space="preserve">[pdfText.Substring(
 	pdfText.IndexOf("Total Amount:")+38,
-	6
-)]</InArgument>
+	4
+).Trim]</InArgument>
                   </Assign.Value>
                 </Assign>
                 <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,92" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="Warn" Message="[&quot;eivat hinta.&quot;+totalAmount+&quot;.&quot;]" />
